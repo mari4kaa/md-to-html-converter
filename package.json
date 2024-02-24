@@ -1,0 +1,27 @@
+{
+  "name": "md-to-html-converter",
+  "version": "1.0.0",
+  "description": "An app for converting markdown to HTML",
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint ./",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mari4kaa/md-to-html-converter.git"
+  },
+  "author": "Mariia Kryvokhata",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mari4kaa/md-to-html-converter/issues"
+  },
+  "homepage": "https://github.com/mari4kaa/md-to-html-converter#readme",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
