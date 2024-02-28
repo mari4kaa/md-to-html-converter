@@ -6,16 +6,21 @@ const fs = require('fs');
 program
   .version('1.0.0')
   .arguments('<filePath>')
-  .action((filePath) => {
+  .option('-o, --out <outputFile>', 'Provide the output file for HTML')
+  .action((mdFilePath, options) => {
+    if (!fs.existsSync(mdFilePath)) {
+      console.error(`Error: The file "${mdFilePath}" does not exist.`);
+      process.exit(1);
+    }
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-          console.error('Error reading file:', err);
-          return;
-        }
-  
-        convertMd(data)
-      });
+    const markdown = fs.readFileSync(mdFilePath, 'utf8');
+    const html = convertMd(markdown);
+
+    if (options.out) {
+      fs.writeFileSync(options.out, html, 'utf8');
+    } else {
+      console.log(html);
+    }
   });
 
 program.parse(process.argv);
