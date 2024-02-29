@@ -14,8 +14,8 @@ class Converter {
 
     for (const line of lines) {
       if (line.trim() === '```') {
+        this.html += this.inPreformattedText ? '</pre>\n' : '<pre>\n';
         this.inPreformattedText = !this.inPreformattedText;
-        this.html += this.inPreformattedText ? '<pre>\n' : '</pre>\n';
       } else if (this.inPreformattedText) {
         this.html += `${line}\n`;
       } else if (line.trim() === '') {
