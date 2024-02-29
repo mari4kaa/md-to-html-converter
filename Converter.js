@@ -29,12 +29,12 @@ class Converter {
           this.inParagraph = true;
         }
 
-        let processedLine = line;
-        processedLine = processedLine.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-        processedLine = processedLine.replace(/(?<!\w)(_)(\w+(?:\s+\w+)*)(_)(?!\w)/g, '<i>$2</i>');
-        processedLine = processedLine.replace(/`(.*?)`/g, '<tt>$1</tt>');
+        let currentLine = line;
+        currentLine = currentLine.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        currentLine = currentLine.replace(/(?<!\w)(_)(\w+(?:\s+\w+)*)(_)(?!\w)/g, '<i>$2</i>');
+        currentLine = currentLine.replace(/`(.*?)`/g, '<tt>$1</tt>');
 
-        this.html += processedLine + '\n';
+        this.html += currentLine + '\n';
       }
     }
 
