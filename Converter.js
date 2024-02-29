@@ -14,7 +14,6 @@ class Converter {
 
   convertMd = (markdown) => {
     this.markdown = markdown;
-
     const lines = markdown.split('\n');
 
     for (const line of lines) {
@@ -34,12 +33,7 @@ class Converter {
           this.inParagraph = true;
         }
 
-        let currentLine = line;
-        currentLine = currentLine.replace(this.regexps.bold, '<b>$1</b>');
-        currentLine = currentLine.replace(this.regexps.italic, '<i>$2</i>');
-        currentLine = currentLine.replace(this.regexps.monospaced, '<tt>$1</tt>');
-
-        this.html += currentLine + '\n';
+        this.replaceFormattingTags(line);
       }
     }
 
@@ -48,6 +42,15 @@ class Converter {
     }
 
     return this.html;
+  };
+
+  replaceFormattingTags (line) {
+    let currentLine = line;
+    currentLine = currentLine.replace(this.regexps.bold, '<b>$1</b>');
+    currentLine = currentLine.replace(this.regexps.italic, '<i>$2</i>');
+    currentLine = currentLine.replace(this.regexps.monospaced, '<tt>$1</tt>');
+
+    this.html += currentLine + '\n';
   };
 };
 
