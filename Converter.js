@@ -15,7 +15,7 @@ class Converter {
 
     for (const line of lines) {
       if (line.trim() === tags.preformatted.md) {
-        this.html += this.inPreformattedText ? `${tags.preformatted.close}\n` : `${tags.preformatted.close}\n`;
+        this.html += this.inPreformattedText ? `${tags.preformatted.close}\n` : `${tags.preformatted.open}\n`;
         this.inPreformattedText = !this.inPreformattedText;
       } else if (this.inPreformattedText) {
         this.html += `${line}\n`;
