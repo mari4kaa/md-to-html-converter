@@ -21,6 +21,13 @@ class App {
     }
 
     const markdown = fs.readFileSync(this.mdFilePath, 'utf8');
+    try {
+      this.validator.validateMdContent(markdown);
+    } catch (err) {
+      console.error(err);
+      process.exit(1);
+    }
+
     const html = this.converter.convertMd(markdown);
 
     if (this.options.out) {
