@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs').promises;
 const { args, options } = require('./config/commander');
 const { Converter } = require('./Converter');
 const { Validator } = require('./Validator');
@@ -14,18 +14,18 @@ class App {
     this.validator = new Validator();
   }
 
-  start () {
+  async start () {
     for (const filePath of this.filePaths) {
       if (filePath.endsWith('.html')) continue;
 
       try {
-        fs.accessSync(filePath);
+        await fs.access(filePath);
       } catch (err) {
         console.error(`Error: The file "${filePath}" does not exist.`);
         process.exit(1);
       }
 
-      const markdown = fs.readFileSync(filePath, 'utf-8');
+      const markdown = await fs.readFile(filePath, 'utf-8');
 
       try {
         this.validator.validateMdContent(markdown);
@@ -37,7 +37,7 @@ class App {
     }
 
     if (this.options.out) {
-      fs.writeFileSync(this.options.out, this.html, 'utf-8');
+      await fs.writeFile(this.options.out, this.html, 'utf-8');
     } else {
       console.log(this.html);
     }
@@ -45,4 +45,6 @@ class App {
 }
 
 const app = new App(args, options);
-app.start();
+(async function () {
+  app.start();
+})();
