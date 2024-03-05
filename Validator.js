@@ -25,16 +25,16 @@ class Validator {
         }
 
         for (let i = 0; i < openChars.length; i++) {
-          const startIndex = openChars[i].index;
-          const endIndex = closeChars[i].index + closeChars[i][0].trim().length;
+          const openCharIdx = openChars[i].index;
+          const closeCharIdx = closeChars[i].index + closeChars[i][0].trim().length;
 
-          const content = line.substring(startIndex + mdTag.length, endIndex - mdTag.length);
+          const content = line.substring(openCharIdx + mdTag.length, closeCharIdx - mdTag.length);
 
-          for (const subsymbol of this.mdTags) {
-            const substarted = this.findFormattedEnds(content, subsymbol);
+          for (const nestedTag of this.mdTags) {
+            const nestedCharEnds = this.findFormattedEnds(content, nestedTag);
 
-            if (substarted.length) {
-              throw new Error(`Nested tags were found "${subsymbol}" inside "${mdTag}"`);
+            if (nestedCharEnds.length) {
+              throw new Error(`Nested tags were found "${nestedTag}" inside "${mdTag}"`);
             }
           }
         }
