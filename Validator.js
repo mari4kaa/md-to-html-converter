@@ -23,12 +23,23 @@ class Validator {
         else if (openChars.length !== closeChars.length) {
           throw new Error(`Unclosed tag ${mdTag} was found`);
         }
+
+        for (let i = 0; i < openChars.length; i++) {
+          const startIndex = openChars[i].index;
+          const endIndex = closeChars[i].index + closeChars[i][0].trim().length;
+
+          const content = line.substring(startIndex + mdTag.length, endIndex - mdTag.length);
+
+          for (const subsymbol of this.mdTags) {
+            const substarted = this.findFormattedEnds(content, subsymbol);
+
+            if (substarted.length) {
+              throw new Error(`Nested tags were found "${subsymbol}" inside "${mdTag}"`);
+            }
+          }
+        }
       }
     }
-  }
-
-  validateNested (line) {
-
   }
 
   findFormattedEnds (line, mdTag) {
@@ -56,6 +67,6 @@ class Validator {
       closeChar: `[^\\s]${escaped}(?:\\s|$)`
     };
   }
-};
+}
 
 module.exports = { Validator };
