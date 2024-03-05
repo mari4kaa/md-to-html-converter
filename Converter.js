@@ -14,6 +14,8 @@ class Converter {
     const lines = markdown.split('\n');
 
     for (const line of lines) {
+      if (line.startsWith('// ')) continue;
+
       if (line.trim() === tags.preformatted.md) {
         this.html += this.inPreformattedText ? `${tags.preformatted.close}\n` : `${tags.preformatted.open}\n`;
         this.inPreformattedText = !this.inPreformattedText;
