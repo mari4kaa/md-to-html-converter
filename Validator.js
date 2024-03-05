@@ -1,6 +1,6 @@
 'use strict';
 
-const { tags } = require('./constants');
+const { tags } = require('./config/constants');
 
 class Validator {
   constructor () {

@@ -1,6 +1,6 @@
 'use strict';
 
-const { tags, regexps } = require('./constants');
+const { tags, regexps } = require('./config/constants');
 
 class Converter {
   constructor () {
