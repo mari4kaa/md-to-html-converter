@@ -1,6 +1,8 @@
 'use strict';
 
-const { tags } = require('./config/constants');
+const fs = require('fs').promises;
+const path = require('path');
+const { tags, allowedExtensions } = require('./config/constants');
 
 class Validator {
   constructor () {
@@ -9,8 +11,25 @@ class Validator {
     this.mdTags = Object.entries(tags).map(([, mdTag]) => mdTag.md);
   }
 
-  validateMdFilepath (mdFilePath) {
+  async validateMdFilepath (mdFilePath) {
+    await this.checkAccess(mdFilePath);
+    await this.checkExtention(mdFilePath);
+  }
 
+  async checkAccess (mdFilePath) {
+    try {
+      await fs.access(mdFilePath);
+    } catch (err) {
+      throw new Error(`Error: The file "${mdFilePath}" does not exist.`);
+    }
+  }
+
+  async checkExtention (mdFilePath) {
+    const ext = path.extname(mdFilePath);
+    const valid = allowedExtensions.includes(ext);
+    if (!valid) {
+      throw new Error(`Error: The file "${mdFilePath}" has wrong extension. Only ${allowedExtensions} allowed`);
+    }
   }
 
   validateMdContent (markdown) {

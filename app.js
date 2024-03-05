@@ -16,12 +16,10 @@ class App {
 
   async start () {
     for (const filePath of this.filePaths) {
-      if (filePath.endsWith('.html')) continue;
-
       try {
-        await fs.access(filePath);
+        await this.validator.validateMdFilepath(filePath);
       } catch (err) {
-        console.error(`Error: The file "${filePath}" does not exist.`);
+        console.error(err);
         process.exit(1);
       }
 
