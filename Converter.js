@@ -19,14 +19,14 @@ class Converter {
         this.inPreformattedText = !this.inPreformattedText;
       } else if (this.inPreformattedText) {
         this.html += `${line}\n`;
-      } else if (line.trim() === tags.paragraph.md) {
+      } else if (line.trim() === '') {
         if (this.inParagraph) {
-          this.html += `${tags.paragraph.close}\n`;
+          this.html += '</p>\n';
           this.inParagraph = false;
         }
       } else {
         if (!this.inParagraph) {
-          this.html += `${tags.paragraph.open}\n`;
+          this.html += '<p>\n';
           this.inParagraph = true;
         }
 
@@ -35,7 +35,7 @@ class Converter {
       }
     }
 
-    if (this.inParagraph) this.html += `${tags.paragraph.close}\n`;
+    if (this.inParagraph) this.html += '</p>\n';
 
     return this.html;
   };
