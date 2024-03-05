@@ -13,7 +13,7 @@ class Validator {
 
   async validateMdFilepath (mdFilePath) {
     await this.checkAccess(mdFilePath);
-    await this.checkExtention(mdFilePath);
+    this.checkExtention(mdFilePath);
   }
 
   async checkAccess (mdFilePath) {
@@ -24,7 +24,7 @@ class Validator {
     }
   }
 
-  async checkExtention (mdFilePath) {
+  checkExtention (mdFilePath) {
     const ext = path.extname(mdFilePath);
     const valid = allowedExtensions.includes(ext);
     if (!valid) {
