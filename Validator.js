@@ -24,19 +24,24 @@ class Validator {
           throw new Error(`Unclosed tag ${mdTag} was found`);
         }
 
-        for (let i = 0; i < openChars.length; i++) {
-          const openCharIdx = openChars[i].index;
-          const closeCharIdx = closeChars[i].index + closeChars[i][0].trim().length;
+        this.checkNested(line, mdTag, { openChars, closeChars });
+      }
+    }
+  }
 
-          const content = line.substring(openCharIdx + mdTag.length, closeCharIdx - mdTag.length);
+  checkNested (line, primaryTag, formattedEnds) {
+    const { openChars, closeChars } = formattedEnds;
+    for (let i = 0; i < openChars.length; i++) {
+      const openCharIdx = openChars[i].index;
+      const closeCharIdx = closeChars[i].index + closeChars[i][0].trim().length;
 
-          for (const nestedTag of this.mdTags) {
-            const nestedCharEnds = this.findFormattedEnds(content, nestedTag);
+      const content = line.substring(openCharIdx + primaryTag.length, closeCharIdx - primaryTag.length);
 
-            if (nestedCharEnds.length) {
-              throw new Error(`Nested tags were found "${nestedTag}" inside "${mdTag}"`);
-            }
-          }
+      for (const nestedTag of this.mdTags) {
+        const nestedCharEnds = this.findFormattedEnds(content, nestedTag);
+
+        if (nestedCharEnds.length) {
+          throw new Error(`Nested tags were found "${nestedTag}" inside "${primaryTag}"`);
         }
       }
     }
