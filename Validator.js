@@ -25,7 +25,7 @@ class Validator {
     try {
       await fs.access(mdFilePath);
     } catch (err) {
-      throw new Error(`Error: The file "${mdFilePath}" does not exist.`);
+      throw new Error(`Error: No access to "${mdFilePath}". Wrong option's format or non-existing file.`);
     }
   }
 
