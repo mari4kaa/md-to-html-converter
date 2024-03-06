@@ -26,12 +26,11 @@ class App {
       const markdown = await fs.readFile(filePath, 'utf-8');
 
       try {
-        this.validator.validateMdContent(markdown);
+        this.html += this.converter.convertMd(markdown, this.validator.validateMdContent.bind(this.validator));
       } catch (err) {
         console.error(err);
         process.exit(1);
       }
-      this.html += this.converter.convertMd(markdown);
     }
 
     if (this.options.out) {

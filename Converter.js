@@ -9,16 +9,24 @@ class Converter {
     this.inParagraph = false;
   }
 
-  convertMd (markdown) {
+  convertMd (markdown, validateFunc) {
     this.markdown = markdown;
     const lines = markdown.split('\n');
 
     for (const line of lines) {
       if (line.startsWith('// ')) continue;
 
-      this.handlePreformattedText(line);
-      this.handleEmptyLine(line);
-      this.handleParagraph(line);
+      if (line.trim() === tags.preformatted.md) {
+        this.handlePreformattedStart();
+      } else if (this.inPreformattedText) {
+        this.html += `${line}\n`;
+      } else if (line.trim() === '') {
+        validateFunc(line);
+        this.handleEmptyLine();
+      } else {
+        validateFunc(line);
+        this.handleRegularLine(line);
+      }
     }
 
     if (this.inParagraph) this.html += '</p>\n';
@@ -26,32 +34,26 @@ class Converter {
     return this.html;
   }
 
-  handlePreformattedText (line) {
-    if (line.trim() === tags.preformatted.md) {
-      this.html += this.inPreformattedText ? `${tags.preformatted.close}\n` : `${tags.preformatted.open}\n`;
-      this.inPreformattedText = !this.inPreformattedText;
-    } else if (this.inPreformattedText) {
-      this.html += `${line}\n`;
-    }
+  handlePreformattedStart () {
+    this.html += this.inPreformattedText ? `${tags.preformatted.close}\n` : `${tags.preformatted.open}\n`;
+    this.inPreformattedText = !this.inPreformattedText;
   }
 
-  handleEmptyLine (line) {
-    if (line.trim() === '' && this.inParagraph) {
+  handleEmptyLine () {
+    if (this.inParagraph) {
       this.html += '</p>\n';
       this.inParagraph = false;
     }
   }
 
-  handleParagraph (line) {
-    if (line.trim() !== '' && !this.inParagraph) {
+  handleRegularLine (line) {
+    if (!this.inParagraph) {
       this.html += '<p>\n';
       this.inParagraph = true;
     }
 
-    if (line.trim() !== '') {
-      const htmlLine = this.replaceFormattingTags(line) + '\n';
-      this.html += htmlLine;
-    }
+    const htmlLine = this.replaceFormattingTags(line) + '\n';
+    this.html += htmlLine;
   }
 
   replaceFormattingTags (line) {
