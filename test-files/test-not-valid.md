@@ -5,6 +5,7 @@ Not right _italic here.
 Not right italic_ here too.
 Not right `monospaced here.
 Not right monospaced` here too.
+This **should_ be** invalid: unclosed tags.
 **_this is invalid_**
 **`this is invalid`**
 ****this is invalid`****

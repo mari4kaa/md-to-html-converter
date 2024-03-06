@@ -2,13 +2,14 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const { tags, allowedExtensions } = require('./config/constants');
+const { regexps, tags, allowedExtensions } = require('./config/constants');
 
 class Validator {
   constructor () {
     this.isValidFilepath = true;
     this.inPreformattedText = false;
     this.mdTags = Object.entries(tags).map(([, mdTag]) => mdTag.md);
+    this.isClosedRegexps = Object.entries(regexps).map(([, regexp]) => regexp);
   }
 
   async validateMdFilepath (mdFilePath) {
@@ -56,11 +57,11 @@ class Validator {
 
       const content = line.substring(openCharIdx + primaryTag.length, closeCharIdx - primaryTag.length);
 
-      for (const nestedTag of this.mdTags) {
-        const { closeChars: nestedCharEnds } = this.findFormattedEnds(content, nestedTag);
-
-        if (nestedCharEnds.length) {
-          throw new Error(`Nested tags were found "${nestedTag}" inside "${primaryTag}"`);
+      for (const regexp of this.isClosedRegexps) {
+        const isNested = content.match(regexp);
+        if (isNested) {
+          console.log(isNested);
+          throw new Error(`Nested tags were found: ${line}`);
         }
       }
     }
