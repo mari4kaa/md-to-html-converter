@@ -17,7 +17,7 @@ And this _ is not italic too.
 And this `*` should be valid.
 
 ```
-This text is **preformatted**
+This text is **_preformatted_**
 
 And can have multiple paragraphs
 ```
