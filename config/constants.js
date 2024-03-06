@@ -15,6 +15,6 @@ const regexps = {
 
 const inputExtensions = ['.md'];
 
-const outputExtensions = ['.html'];
+const outputExtensions = ['.html', '.txt'];
 
 module.exports = { tags, regexps, inputExtensions, outputExtensions };
