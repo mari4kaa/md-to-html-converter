@@ -34,6 +34,12 @@ class App {
     }
 
     if (this.options.out) {
+      try {
+        this.validator.validateOutputPath(this.options.out);
+      } catch (err) {
+        console.error(err);
+        process.exit(1);
+      }
       await fs.writeFile(this.options.out, this.html, 'utf-8');
     } else {
       console.log(this.html);

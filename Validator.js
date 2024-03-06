@@ -2,7 +2,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const { regexps, tags, allowedExtensions } = require('./config/constants');
+const { regexps, tags, inputExtensions, outputExtensions } = require('./config/constants');
 
 class Validator {
   constructor () {
@@ -14,7 +14,11 @@ class Validator {
 
   async validateMdFilepath (mdFilePath) {
     await this.checkAccess(mdFilePath);
-    this.checkExtension(mdFilePath);
+    this.checkExtension(mdFilePath, true);
+  }
+
+  validateOutputPath (filePath) {
+    this.checkExtension(filePath, false);
   }
 
   async checkAccess (mdFilePath) {
@@ -25,11 +29,12 @@ class Validator {
     }
   }
 
-  checkExtension (mdFilePath) {
-    const ext = path.extname(mdFilePath);
-    const valid = allowedExtensions.includes(ext);
+  checkExtension (filePath, isInput) {
+    const ext = path.extname(filePath);
+    const valid = isInput ? inputExtensions.includes(ext) : outputExtensions.includes(ext);
+    const allowedExtensions = isInput ? inputExtensions : outputExtensions;
     if (!valid) {
-      throw new Error(`Error: The file "${mdFilePath}" has wrong extension. Only ${allowedExtensions} allowed`);
+      throw new Error(`Error: The file "${filePath}" has wrong extension. Only ${allowedExtensions} allowed`);
     }
   }
 

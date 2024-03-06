@@ -13,6 +13,8 @@ const regexps = {
   monospaced: /`(.*?)`/g
 };
 
-const allowedExtensions = ['.md'];
+const inputExtensions = ['.md'];
 
-module.exports = { tags, regexps, allowedExtensions };
+const outputExtensions = ['.html'];
+
+module.exports = { tags, regexps, inputExtensions, outputExtensions };
