@@ -9,7 +9,7 @@ class Converter {
     this.inParagraph = false;
   }
 
-  convertMd (markdown) {
+  convertMd (markdown, validateFunc) {
     this.markdown = markdown;
     const lines = markdown.split('\n');
 
@@ -21,8 +21,10 @@ class Converter {
       } else if (this.inPreformattedText) {
         this.html += `${line}\n`;
       } else if (line.trim() === '') {
+        validateFunc(line);
         this.handleEmptyLine();
       } else {
+        validateFunc(line);
         this.handleRegularLine(line);
       }
     }

@@ -33,19 +33,15 @@ class Validator {
     }
   }
 
-  validateMdContent (markdown) {
-    const lines = markdown.split('\n');
-
-    for (const line of lines) {
-      for (const mdTag of this.mdTags) {
-        const { openChars, closeChars } = this.findFormattedEnds(line, mdTag);
-        if (!openChars.length && !closeChars.length) continue;
-        else if (openChars.length !== closeChars.length) {
-          throw new Error(`Unclosed tag ${mdTag} was found`);
-        }
-
-        this.checkNested(line, mdTag, { openChars, closeChars });
+  validateMdContent (line) {
+    for (const mdTag of this.mdTags) {
+      const { openChars, closeChars } = this.findFormattedEnds(line, mdTag);
+      if (!openChars.length && !closeChars.length) continue;
+      else if (openChars.length !== closeChars.length) {
+        throw new Error(`Unclosed tag ${mdTag} was found`);
       }
+
+      this.checkNested(line, mdTag, { openChars, closeChars });
     }
   }
 
@@ -60,7 +56,6 @@ class Validator {
       for (const regexp of this.isClosedRegexps) {
         const isNested = content.match(regexp);
         if (isNested) {
-          console.log(isNested);
           throw new Error(`Nested tags were found: ${line}`);
         }
       }
