@@ -57,7 +57,7 @@ class Validator {
       const content = line.substring(openCharIdx + primaryTag.length, closeCharIdx - primaryTag.length);
 
       for (const nestedTag of this.mdTags) {
-        const nestedCharEnds = this.findFormattedEnds(content, nestedTag);
+        const { closeChars: nestedCharEnds } = this.findFormattedEnds(content, nestedTag);
 
         if (nestedCharEnds.length) {
           throw new Error(`Nested tags were found "${nestedTag}" inside "${primaryTag}"`);
