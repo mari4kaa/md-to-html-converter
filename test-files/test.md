@@ -8,7 +8,6 @@ This is still paragraph 1.
 
 And after a blank line this is paragraph 2.
 snake_case should not be italicized.
-// THIS IS JUST A COMMENT
 But this _snake_case_ should be italicized.
 
 But _this_ is valid italic.

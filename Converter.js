@@ -14,8 +14,6 @@ class Converter {
     const lines = markdown.split('\n');
 
     for (const line of lines) {
-      if (line.startsWith('// ')) continue;
-
       if (line.trim() === tags.preformatted.md) {
         this.handlePreformattedStart();
       } else if (this.inPreformattedText) {
