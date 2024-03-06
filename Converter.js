@@ -17,7 +17,6 @@ class Converter {
       if (line.startsWith('// ')) continue;
 
       this.handlePreformattedText(line);
-      if (this.inPreformattedText) continue;
       this.handleEmptyLine(line);
       this.handleParagraph(line);
     }
