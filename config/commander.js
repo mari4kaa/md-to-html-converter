@@ -7,7 +7,7 @@ program
   .name('md-to-html-converter')
   .version(pckg.version)
   .argument('<mdFilePath>', 'Provide the path to markdown file')
-  .option('-o, --out <outputFile>', 'Provide the output file for HTML');
+  .option('-o, --out <HTMLfilepath>', 'Provide the path to output file');
 
 program.parse();
 
