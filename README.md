@@ -31,12 +31,12 @@ node app.js <mdFilePath> [-o, --out <HTMLfilepath>]
 
 ## Examples
 ### Output to console
-![image](https://github.com/mari4kaa/md-to-html-converter/assets/103357823/20bbc572-22dc-45d9-8545-ccaecc3b5ace)
+![image](https://github.com/mari4kaa/md-to-html-converter/assets/103357823/4ac0dca2-11ed-4e86-97f7-0d2c68490061)
 
 ### Output to file
-![image](https://github.com/mari4kaa/md-to-html-converter/assets/103357823/b2ff6a6d-6f6a-49c7-ac40-074b7425c1e6)
+![image](https://github.com/mari4kaa/md-to-html-converter/assets/103357823/2be34aec-02b4-4cb5-8638-1fe1fa06ae0b)
 
-![image](https://github.com/mari4kaa/md-to-html-converter/assets/103357823/29dacc35-b8bb-42f8-956e-289e28f67957)
+![image](https://github.com/mari4kaa/md-to-html-converter/assets/103357823/3a4753f3-eb15-4af3-b8a6-199c58e6cd08)
 
 ## Revert commit
 [Link](https://github.com/mari4kaa/md-to-html-converter/commit/fb395a99633d69288dc1470b86a2c59fdc2cf6de)
