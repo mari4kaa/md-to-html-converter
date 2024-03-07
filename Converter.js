@@ -20,7 +20,7 @@ class Converter {
         this.html += `${line}\n`;
       } else if (line.trim() === '') {
         validateFunc(line);
-        this.handleEmptyLine();
+        this.handleParagraphEnd();
       } else {
         validateFunc(line);
         this.handleRegularLine(line);
@@ -33,11 +33,19 @@ class Converter {
   }
 
   handlePreformattedStart () {
+    this.handleParagraphStart();
     this.html += this.inPreformattedText ? `${tags.preformatted.close}\n` : `${tags.preformatted.open}\n`;
     this.inPreformattedText = !this.inPreformattedText;
   }
 
-  handleEmptyLine () {
+  handleParagraphStart () {
+    if (!this.inParagraph) {
+      this.html += '<p>\n';
+      this.inParagraph = true;
+    }
+  }
+
+  handleParagraphEnd () {
     if (this.inParagraph) {
       this.html += '</p>\n';
       this.inParagraph = false;
@@ -45,11 +53,7 @@ class Converter {
   }
 
   handleRegularLine (line) {
-    if (!this.inParagraph) {
-      this.html += '<p>\n';
-      this.inParagraph = true;
-    }
-
+    this.handleParagraphStart();
     const htmlLine = this.replaceFormattingTags(line) + '\n';
     this.html += htmlLine;
   }
