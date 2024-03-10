@@ -10,7 +10,7 @@ class App {
     this.filePaths = args;
     this.options = options;
     this.html = '';
-    this.converter = new Converter();
+    this.converter = new Converter(this.options);
     this.validator = new Validator();
   }
 

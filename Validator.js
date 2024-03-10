@@ -2,13 +2,13 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const { regexps, tags, inputExtensions, outputExtensions } = require('./config/constants');
+const { regexps, tagsHtml, inputExtensions, outputExtensions } = require('./config/constants');
 
 class Validator {
   constructor () {
     this.isValidFilepath = true;
     this.inPreformattedText = false;
-    this.mdTags = Object.entries(tags).map(([, mdTag]) => mdTag.md);
+    this.mdTags = Object.entries(tagsHtml).map(([, mdTag]) => mdTag.md);
     this.isClosedRegexps = Object.entries(regexps).map(([, regexp]) => regexp);
   }
 

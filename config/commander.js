@@ -17,7 +17,6 @@ program
     ])
   ).action((_, opts) => {
     if (!opts.format) opts.format = opts.out ? 'html' : 'ansi';
-    console.log(opts.format);
   });
 
 program.parse();
