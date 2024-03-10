@@ -20,7 +20,6 @@ class Converter {
       } else if (this.inPreformattedText) {
         this.html += `${line}\n`;
       } else if (line.trim() === '') {
-        validateFunc(line);
         this.handleParagraphEnd();
       } else {
         validateFunc(line);
