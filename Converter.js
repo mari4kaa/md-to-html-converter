@@ -3,22 +3,27 @@
 const { tagsHtml, tagsAnsi, regexps } = require('./config/constants');
 
 class Converter {
-  constructor (options) {
+  constructor (format) {
     this.convertedLine = '';
     this.inPreformattedText = false;
     this.inParagraph = false;
-    this.tags = options.format === 'html' ? tagsHtml : tagsAnsi;
+    this.tags = format === 'html' ? tagsHtml : tagsAnsi;
   }
 
-  convertMd (line) {
-    if (line.trim() === this.tags.preformatted.md) {
-      this.handlePreformattedStart();
-    } else if (this.inPreformattedText) {
-      this.convertedLine += `${line}\n`;
-    } else if (line.trim() === '') {
-      this.handleParagraphEnd();
-    } else {
-      this.handleRegularLine(line);
+  convertMd (markdown, validateFunc) {
+    const lines = markdown.split('\n');
+
+    for (const line of lines) {
+      if (line.trim() === this.tags.preformatted.md) {
+        this.handlePreformattedStart();
+      } else if (this.inPreformattedText) {
+        this.convertedLine += `${line}\n`;
+      } else if (line.trim() === '') {
+        this.handleParagraphEnd();
+      } else {
+        validateFunc(line);
+        this.handleRegularLine(line);
+      }
     }
 
     if (this.inParagraph) this.convertedLine += this.tags.paragraph.close;

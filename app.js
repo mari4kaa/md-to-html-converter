@@ -11,7 +11,7 @@ class App {
     this.filePaths = args;
     this.options = options;
     this.output = '';
-    this.converter = new Converter(this.options);
+    this.converter = new Converter(this.options.format);
     this.validator = new Validator();
     this.pathManager = new PathManager();
   }
@@ -22,11 +22,7 @@ class App {
         await this.pathManager.validateMdFilepath(filePath);
 
         const markdown = await fs.readFile(filePath, 'utf-8');
-        const lines = markdown.split('\n');
-        for (const line of lines) {
-          this.validator.validateMdContent(line);
-          this.output += this.converter.convertMd(line);
-        }
+        this.output += this.converter.convertMd(markdown, this.validator.validateMdContent.bind(this.validator));
 
         if (this.options.out) {
           this.pathManager.validateOutputPath(this.options.out);
