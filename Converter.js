@@ -4,58 +4,51 @@ const { tagsHtml, tagsAnsi, regexps } = require('./config/constants');
 
 class Converter {
   constructor (options) {
-    this.html = '';
+    this.convertedLine = '';
     this.inPreformattedText = false;
     this.inParagraph = false;
     this.tags = options.format === 'html' ? tagsHtml : tagsAnsi;
   }
 
-  convertMd (markdown, validateFunc) {
-    this.markdown = markdown;
-    const lines = markdown.split('\n');
-
-    for (const line of lines) {
-      if (line.trim() === this.tags.preformatted.md) {
-        this.handlePreformattedStart();
-      } else if (this.inPreformattedText) {
-        this.html += `${line}\n`;
-      } else if (line.trim() === '') {
-        this.handleParagraphEnd();
-      } else {
-        validateFunc(line);
-        this.handleRegularLine(line);
-      }
+  convertMd (line) {
+    if (line.trim() === this.tags.preformatted.md) {
+      this.handlePreformattedStart();
+    } else if (this.inPreformattedText) {
+      this.convertedLine += `${line}\n`;
+    } else if (line.trim() === '') {
+      this.handleParagraphEnd();
+    } else {
+      this.handleRegularLine(line);
     }
 
-    if (this.inParagraph) this.html += this.tags.paragraph.close;
+    if (this.inParagraph) this.convertedLine += this.tags.paragraph.close;
 
-    return this.html;
+    return this.convertedLine;
   }
 
   handlePreformattedStart () {
     this.handleParagraphStart();
-    this.html += this.inPreformattedText ? this.tags.preformatted.close : this.tags.preformatted.open;
+    this.convertedLine += this.inPreformattedText ? this.tags.preformatted.close : this.tags.preformatted.open;
     this.inPreformattedText = !this.inPreformattedText;
   }
 
   handleParagraphStart () {
     if (!this.inParagraph) {
-      this.html += this.tags.paragraph.open;
+      this.convertedLine += this.tags.paragraph.open;
       this.inParagraph = true;
     }
   }
 
   handleParagraphEnd () {
     if (this.inParagraph) {
-      this.html += this.tags.paragraph.close;
+      this.convertedLine += this.tags.paragraph.close;
       this.inParagraph = false;
     }
   }
 
   handleRegularLine (line) {
     this.handleParagraphStart();
-    const htmlLine = this.replaceFormattingTags(line) + '\n';
-    this.html += htmlLine;
+    this.convertedLine += this.replaceFormattingTags(line) + '\n';
   }
 
   replaceFormattingTags (line) {
