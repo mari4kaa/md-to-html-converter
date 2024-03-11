@@ -21,7 +21,7 @@ class Converter {
       } else if (line.trim() === '') {
         this.handleParagraphEnd();
       } else {
-        validateFunc(line);
+        if (validateFunc) validateFunc(line);
         this.handleRegularLine(line);
       }
     }
@@ -48,6 +48,8 @@ class Converter {
     if (this.inParagraph) {
       this.convertedLine += this.tags.paragraph.close;
       this.inParagraph = false;
+    } else {
+      this.handleParagraphStart();
     }
   }
 
