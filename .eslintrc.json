@@ -4,10 +4,16 @@
         "es2021": true,
         "node": true
     },
-    "extends": "standard",
+    "extends": [
+        "standard",
+        "plugin:jest/recommended"
+    ],
     "parserOptions": {
         "ecmaVersion": "latest"
     },
+    "plugins": [
+        "jest"
+    ],
     "rules": {
         "semi": [2, "always"]
     }
