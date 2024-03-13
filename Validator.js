@@ -1,18 +1,18 @@
 'use strict';
 
-const { regexps, tagsHtml } = require('./config/constants');
+const { tagsHtml } = require('./config/constants');
+const { getFormattedEnds } = require('./config/getFormattedEnds')
 
 class Validator {
   constructor () {
     this.isValidFilepath = true;
     this.inPreformattedText = false;
     this.mdTags = Object.entries(tagsHtml).map(([, mdTag]) => mdTag.md);
-    this.isClosedRegexps = Object.entries(regexps).map(([, regexp]) => regexp);
   }
 
   validateMdContent (line) {
     for (const mdTag of this.mdTags) {
-      const { openChars, closeChars } = this.findFormattedEnds(line, mdTag);
+      const { openChars, closeChars } = getFormattedEnds(line, mdTag);
       if (!openChars.length && !closeChars.length) continue;
       else if (openChars.length !== closeChars.length) {
         throw new Error(`Unclosed tag ${mdTag} was found`);
@@ -26,43 +26,18 @@ class Validator {
     const { openChars, closeChars } = formattedEnds;
     for (let i = 0; i < openChars.length; i++) {
       const openCharIdx = openChars[i].index;
-      const closeCharIdx = closeChars[i].index + closeChars[i][0].trim().length;
+      const closeCharIdx = closeChars[i].index + closeChars[i][0].length;
 
-      const content = line.substring(openCharIdx + primaryTag.length, closeCharIdx - primaryTag.length);
-
-      for (const regexp of this.isClosedRegexps) {
-        const isNested = content.match(regexp);
+      const content = line.substring(openCharIdx, closeCharIdx).trim().slice(primaryTag.length, -primaryTag.length);
+      if (content === '') throw new Error('Empty tags are not allowed');
+      for (const secondaryTag of this.mdTags) {
+        const { openChars: nestedOpened, closeChars: nestedClosed } = getFormattedEnds(content, secondaryTag);
+        const isNested = nestedOpened.length && nestedClosed.length && nestedOpened.length === nestedClosed.length;
         if (isNested) {
           throw new Error(`Nested tags were found: ${line}`);
         }
       }
     }
-  }
-
-  findFormattedEnds (line, mdTag) {
-    const pattern = this.getRegexp(mdTag);
-
-    const matchedFirst = line.matchAll(new RegExp(pattern.openChar, 'g'));
-    const matchedLast = line.matchAll(new RegExp(pattern.closeChar, 'g'));
-    const firstChars = matchedFirst ? [...matchedFirst] : [];
-    const lastChars = matchedLast ? [...matchedLast] : [];
-
-    return {
-      openChars: firstChars,
-      closeChars: lastChars
-    };
-  }
-
-  getRegexp (mdTag) {
-    const shortenedTag = mdTag[0];
-
-    const escShortened = `\\${shortenedTag}`;
-    const escaped = mdTag.replace(new RegExp(escShortened, 'g'), escShortened);
-
-    return {
-      openChar: `(?:\\s|^)${escaped}[^\\s]`,
-      closeChar: `[^\\s]${escaped}(?:\\s|$)`
-    };
   }
 }
 

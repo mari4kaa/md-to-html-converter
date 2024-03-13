@@ -1,6 +1,7 @@
 'use strict';
 
-const { tagsHtml, tagsAnsi, regexps } = require('./config/constants');
+const { tagsHtml, tagsAnsi } = require('./config/constants');
+const { getFormattedEnds } = require('./config/getFormattedEnds')
 
 class Converter {
   constructor (format) {
@@ -19,13 +20,14 @@ class Converter {
       } else if (this.inPreformattedText) {
         this.convertedLine += `${line}\n`;
       } else if (line.trim() === '') {
-        this.handleParagraphEnd();
+        this.handleParagraph();
       } else {
         if (validateFunc) validateFunc(line);
         this.handleRegularLine(line);
       }
     }
 
+    if (this.inPreformattedText) throw new Error('Unclosed preformatted tag');
     if (this.inParagraph) this.convertedLine += this.tags.paragraph.close;
 
     return this.convertedLine;
@@ -44,7 +46,7 @@ class Converter {
     }
   }
 
-  handleParagraphEnd () {
+  handleParagraph () {
     if (this.inParagraph) {
       this.convertedLine += this.tags.paragraph.close;
       this.inParagraph = false;
@@ -60,11 +62,30 @@ class Converter {
 
   replaceFormattingTags (line) {
     let currentLine = line;
-    currentLine = currentLine.replace(regexps.bold, `${this.tags.bold.open}$1${this.tags.bold.close}`);
-    currentLine = currentLine.replace(regexps.italic, `${this.tags.italic.open}$2${this.tags.italic.close}`);
-    currentLine = currentLine.replace(regexps.monospaced, `${this.tags.monospaced.open}$1${this.tags.monospaced.close}`);
+    for (const [, tagObj] of Object.entries(this.tags)) {
+      if(tagObj.md === '\n' | tagObj.md === '```') continue;
+
+      currentLine = this.replaceSameTags(currentLine, tagObj);
+    }
 
     return currentLine;
+  }
+
+  replaceSameTags(line, tagObj) {
+    const { openChars, closeChars } = getFormattedEnds(line, tagObj.md);
+    if(!openChars.length) return line;
+
+    const openChar = openChars[0][0];
+
+    const openCharIdx = openChars[0].index;
+    const closeCharIdx = closeChars[0].index;
+
+    const beforeTags = line.slice(0, openCharIdx + openChar.indexOf(tagObj.md));
+    const betweenTags = line.slice(openCharIdx + openChar.indexOf(tagObj.md) + tagObj.md.length, closeCharIdx + 1);
+    const afterTags = line.slice(closeCharIdx + tagObj.md.length + 1);
+
+    line = beforeTags + tagObj.open + betweenTags + tagObj.close + afterTags;
+    return this.replaceSameTags(line, tagObj);
   }
 }
 

@@ -17,9 +17,10 @@ const tagsAnsi = {
 };
 
 const regexps = {
-  bold: /\*\*(.*?)\*\*/g,
-  italic: /(?<!\w)(_)(\w+(?:\s+\w+)*)(_)(?!\w)/g,
-  monospaced: /`(.*?)`/g
+  openFirst: '(?:\\s|^)',
+  openSecond: '[^\\s]',
+  closeFirst: '[^\\s]',
+  closeSecond: '(?:\\s|$)'
 };
 
 const inputExtensions = ['.md'];
