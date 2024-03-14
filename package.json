@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "lint": "eslint ./",
-    "test": "jest --watchAll --verbose"
+    "test:dev": "jest --watchAll --verbose",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
