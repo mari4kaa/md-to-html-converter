@@ -23,13 +23,13 @@ class App {
 
         const markdown = await fs.readFile(filePath, 'utf-8');
         this.output += this.converter.convertMd(markdown, this.validator.validateMdContent.bind(this.validator));
+      }
 
-        if (this.options.out) {
-          this.pathManager.validateOutputPath(this.options.out);
-          await fs.writeFile(this.options.out, this.output, 'utf-8');
-        } else {
-          console.log(this.output);
-        }
+      if (this.options.out) {
+        this.pathManager.validateOutputPath(this.options.out);
+        await fs.writeFile(this.options.out, this.output, 'utf-8');
+      } else {
+        console.log(this.output);
       }
     } catch (err) {
       console.error(err);

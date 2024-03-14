@@ -11,8 +11,8 @@ const tagsHtml = {
 const tagsAnsi = {
   bold: { md: '**', open: '\x1b[1m', close: '\x1b[0m' },
   italic: { md: '_', open: '\x1b[3m', close: '\x1b[0m' },
-  monospaced: { md: '`', open: '\x1b[0;2m', close: '\x1b[0m' },
-  preformatted: { md: '```', open: '\x1b[0;2m', close: '\x1b[0m' },
+  monospaced: { md: '`', open: '\x1b[7m', close: '\x1b[m' },
+  preformatted: { md: '```', open: '\x1b[7m', close: '\x1b[m' },
   paragraph: { md: '\n', open: '\n', close: '' }
 };
 

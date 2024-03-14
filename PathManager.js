@@ -18,7 +18,7 @@ class PathManager {
     try {
       await fs.access(mdFilePath);
     } catch (err) {
-      throw new Error(`Error: No access to "${mdFilePath}". Wrong option's format or non-existing file.`);
+      throw new Error(`No access to "${mdFilePath}". Wrong option's format or non-existing file.`);
     }
   }
 
@@ -27,7 +27,7 @@ class PathManager {
     const valid = isInput ? inputExtensions.includes(ext) : outputExtensions.includes(ext);
     const allowedExtensions = isInput ? inputExtensions : outputExtensions;
     if (!valid) {
-      throw new Error(`Error: The file "${filePath}" has wrong extension. Only ${allowedExtensions} allowed`);
+      throw new Error(`The file "${filePath}" has wrong extension. Only ${allowedExtensions} allowed`);
     }
   }
 }

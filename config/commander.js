@@ -15,8 +15,8 @@ program
       'ansi',
       'html'
     ])
-  ).action((_, opts) => {
-    if (!opts.format) opts.format = opts.out ? 'html' : 'ansi';
+  ).action((_, options) => {
+    if (!options.format) options.format = options.out ? 'html' : 'ansi';
   });
 
 program.parse();

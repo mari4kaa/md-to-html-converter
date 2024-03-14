@@ -1,7 +1,7 @@
 'use strict';
 
 const { tagsHtml, tagsAnsi } = require('./config/constants');
-const { getFormattedEnds } = require('./config/getFormattedEnds')
+const { getTagsNeighbours } = require('./config/getTagsNeighbours')
 
 class Converter {
   constructor (format) {
@@ -27,10 +27,46 @@ class Converter {
       }
     }
 
-    if (this.inPreformattedText) throw new Error('Unclosed preformatted tag');
-    if (this.inParagraph) this.convertedLine += this.tags.paragraph.close;
+    if (this.inPreformattedText) throw new Error('Unclosed preformatted tag was found');
+    if (this.inParagraph) {
+      this.convertedLine += this.tags.paragraph.close;
+      this.inParagraph = false;
+    }
 
     return this.convertedLine;
+  }
+
+  handleRegularLine (line) {
+    this.handleParagraphStart();
+    this.convertedLine += this.replaceFormattingTags(line) + '\n';
+  }
+
+  replaceFormattingTags (line) {
+    let currentLine = line;
+    for (const [, tagObj] of Object.entries(this.tags)) {
+      if(tagObj.md === '\n' | tagObj.md === '```') continue;
+
+      currentLine = this.replaceSameTags(currentLine, tagObj);
+    }
+
+    return currentLine;
+  }
+
+  replaceSameTags(line, tagObj) {
+    const { openChars, closeChars } = getTagsNeighbours(line, tagObj.md);
+    if(!openChars.length) return line;
+
+    const openChar = openChars[0][0];
+
+    const openCharIdx = openChars[0].index;
+    const closeCharIdx = closeChars[0].index;
+
+    const beforeTags = line.slice(0, openCharIdx + openChar.indexOf(tagObj.md));
+    const betweenTags = line.slice(openCharIdx + openChar.indexOf(tagObj.md) + tagObj.md.length, closeCharIdx + 1);
+    const afterTags = line.slice(closeCharIdx + tagObj.md.length + 1);
+
+    line = beforeTags + tagObj.open + betweenTags + tagObj.close + afterTags;
+    return this.replaceSameTags(line, tagObj);
   }
 
   handlePreformattedStart () {
@@ -53,39 +89,6 @@ class Converter {
     } else {
       this.handleParagraphStart();
     }
-  }
-
-  handleRegularLine (line) {
-    this.handleParagraphStart();
-    this.convertedLine += this.replaceFormattingTags(line) + '\n';
-  }
-
-  replaceFormattingTags (line) {
-    let currentLine = line;
-    for (const [, tagObj] of Object.entries(this.tags)) {
-      if(tagObj.md === '\n' | tagObj.md === '```') continue;
-
-      currentLine = this.replaceSameTags(currentLine, tagObj);
-    }
-
-    return currentLine;
-  }
-
-  replaceSameTags(line, tagObj) {
-    const { openChars, closeChars } = getFormattedEnds(line, tagObj.md);
-    if(!openChars.length) return line;
-
-    const openChar = openChars[0][0];
-
-    const openCharIdx = openChars[0].index;
-    const closeCharIdx = closeChars[0].index;
-
-    const beforeTags = line.slice(0, openCharIdx + openChar.indexOf(tagObj.md));
-    const betweenTags = line.slice(openCharIdx + openChar.indexOf(tagObj.md) + tagObj.md.length, closeCharIdx + 1);
-    const afterTags = line.slice(closeCharIdx + tagObj.md.length + 1);
-
-    line = beforeTags + tagObj.open + betweenTags + tagObj.close + afterTags;
-    return this.replaceSameTags(line, tagObj);
   }
 }
 
