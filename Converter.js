@@ -57,13 +57,14 @@ class Converter {
     if (!openChars.length) return line;
 
     const openChar = openChars[0][0];
+    const closeChar = closeChars[0][0];
 
     const openCharIdx = openChars[0].index;
     const closeCharIdx = closeChars[0].index;
 
     const beforeTags = line.slice(0, openCharIdx + openChar.indexOf(tagObj.md));
-    const betweenTags = line.slice(openCharIdx + openChar.indexOf(tagObj.md) + tagObj.md.length, closeCharIdx + 1);
-    const afterTags = line.slice(closeCharIdx + tagObj.md.length + 1);
+    const betweenTags = line.slice(openCharIdx + openChar.indexOf(tagObj.md) + tagObj.md.length, closeCharIdx + closeChar.indexOf(tagObj.md));
+    const afterTags = line.slice(closeCharIdx + tagObj.md.length + closeChar.indexOf(tagObj.md));
 
     line = beforeTags + tagObj.open + betweenTags + tagObj.close + afterTags;
     return this.replaceSameTags(line, tagObj);
