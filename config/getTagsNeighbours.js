@@ -2,7 +2,7 @@
 
 const { regexps } = require('./constants');
 
-function getFormattedEnds (line, mdTag) {
+function getTagsNeighbours (line, mdTag) {
   const pattern = getRegexps(mdTag);
 
   const matchedFirst = line.matchAll(new RegExp(pattern.openChar, 'g'));
@@ -24,4 +24,4 @@ function getRegexps (mdTag) {
   };
 }
 
-module.exports = { getFormattedEnds };
+module.exports = { getTagsNeighbours };

@@ -1,4 +1,5 @@
 'use strict';
+
 const { Converter } = require('../Converter');
 const { expectedConverted } = require('./expected');
 
@@ -26,12 +27,13 @@ describe('identifies unclosed preformatted tag', () => {
   test('finds unclosed preformatted tag in HTML', () => {
     const converter = new Converter('html');
     const mdInput = '```'
-    expect(() => converter.convertMd(mdInput)).toThrow('Unclosed preformatted tag');
+    expect(() => converter.convertMd(mdInput)).toThrow('Unclosed preformatted tag was found');
   });
 
   test('finds unclosed preformatted tag in ANSI', () => {
     const converter = new Converter('ansi');
     const mdInput = '```'
-    expect(() => converter.convertMd(mdInput)).toThrow('Unclosed preformatted tag');
+    expect(() => converter.convertMd(mdInput)).toThrow('Unclosed preformatted tag was found');
   })
+
 });
