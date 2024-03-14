@@ -1,7 +1,7 @@
 'use strict';
 
 const { tagsHtml } = require('./config/constants');
-const { getTagsNeighbours } = require('./config/getTagsNeighbours')
+const { getTagsNeighbours } = require('./config/getTagsNeighbours');
 
 class Validator {
   constructor () {

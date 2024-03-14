@@ -3,7 +3,6 @@
 const { getTagsNeighbours } = require('../config/getTagsNeighbours');
 
 describe('correctly finds tag`s surroundings', () => {
-
   test('finds surroundings of tags', () => {
     const mdLine = 'Simple `string`';
     const mdTag = '`';
@@ -16,7 +15,6 @@ describe('correctly finds tag`s surroundings', () => {
   test('returns empty arrays when tag was not found', () => {
     const mdLine = 'No tags are there';
     const mdTag = '_';
-    expect(getTagsNeighbours(mdLine, mdTag)).toEqual({openChars: [], closeChars: []});
-  })
-
-})
+    expect(getTagsNeighbours(mdLine, mdTag)).toEqual({ openChars: [], closeChars: [] });
+  });
+});

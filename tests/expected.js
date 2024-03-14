@@ -141,7 +141,7 @@ const expectedConverted = {
       'And this <i>hii _ iii</i> should be valid too.\n',
       'snake_case should not be italicized.\n</p>\n',
       '<p>\n<pre>\nThis text is **_preformatted_**\n\n',
-      'And can have multiple paragraphs\n</pre>\n</p>\n',
+      'And can have multiple paragraphs\n</pre>\n</p>\n'
     ].join(''),
     ansi: [
       '\nThis is a \x1b[1mbold\x1b[0m word \x1b[1mand\x1b[0m this is \x1b[1mtoo\x1b[0m\n',
@@ -150,26 +150,26 @@ const expectedConverted = {
       'This \x1b[7mhii`iii\x1b[m should be valid.\n',
       'And this \x1b[3mhii _ iii\x1b[0m should be valid too.\n',
       'snake_case should not be italicized.\n\n',
-      '\x1b[7mThis text is **_preformatted_**\n\nAnd can have multiple paragraphs\n\x1b[m',
+      '\x1b[7mThis text is **_preformatted_**\n\nAnd can have multiple paragraphs\n\x1b[m'
     ].join('')
   }
-}
+};
 
 const expectedValidated = {
   unfinishedOpenTag: {
     message: 'unfinished open tag is invalid',
     md: 'Unfinished **bold tag',
-    errorMsg: 'Unfinished tag ** was found',
+    errorMsg: 'Unfinished tag ** was found'
   },
   unfinishedCloseTag: {
     message: 'unfinished close tag is invalid',
     md: 'Unfinished monospace` tag',
-    errorMsg: 'Unfinished tag ` was found',
+    errorMsg: 'Unfinished tag ` was found'
   },
   unfinishedBothTags: {
     message: 'two unfinished tag is invalid',
     md: 'Unfinished italic_ _tags',
-    errorMsg: 'Unfinished tag _ was found',
+    errorMsg: 'Unfinished tag _ was found'
   },
   nestedTags: {
     message: 'finished nested tag is invalid',
@@ -179,18 +179,18 @@ const expectedValidated = {
   unfinishedNestedTag: {
     message: 'unfinished nested tag is invalid',
     md: 'Valid **nested _valid tag**',
-    errorMsg: 'Unfinished tag _ was found',
+    errorMsg: 'Unfinished tag _ was found'
   },
   standaloneNestedTag: {
     message: 'standalone nested tag is valid',
     md: '**single ** asterisk**',
-    errorMsg: '',
+    errorMsg: ''
   },
   singleSquizedTag: {
     message: 'single nested tag, which is surrounded by text, is valid',
     md: '`single`backtick`',
     errorMsg: ''
   }
-}
+};
 
 module.exports = { expectedConverted, expectedValidated };

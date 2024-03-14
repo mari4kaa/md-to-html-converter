@@ -4,7 +4,6 @@ process.argv.push('./path/to/input.md', './path/to/input2.md', '--out', './path/
 const { args, options } = require('../config/commander');
 
 describe('command line interface is correct', () => {
-
   test('receives the paths to input files', () => {
     expect(args).toEqual(['./path/to/input.md', './path/to/input2.md']);
   });
@@ -16,5 +15,4 @@ describe('command line interface is correct', () => {
   test('receives the format of output', () => {
     expect(options.format).toBe('html');
   });
-
 });

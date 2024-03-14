@@ -1,7 +1,7 @@
 'use strict';
 
 const { tagsHtml, tagsAnsi } = require('./config/constants');
-const { getTagsNeighbours } = require('./config/getTagsNeighbours')
+const { getTagsNeighbours } = require('./config/getTagsNeighbours');
 
 class Converter {
   constructor (format) {
@@ -44,7 +44,7 @@ class Converter {
   replaceFormattingTags (line) {
     let currentLine = line;
     for (const [, tagObj] of Object.entries(this.tags)) {
-      if(tagObj.md === '\n' | tagObj.md === '```') continue;
+      if (tagObj.md === '\n' | tagObj.md === '```') continue;
 
       currentLine = this.replaceSameTags(currentLine, tagObj);
     }
@@ -52,9 +52,9 @@ class Converter {
     return currentLine;
   }
 
-  replaceSameTags(line, tagObj) {
+  replaceSameTags (line, tagObj) {
     const { openChars, closeChars } = getTagsNeighbours(line, tagObj.md);
-    if(!openChars.length) return line;
+    if (!openChars.length) return line;
 
     const openChar = openChars[0][0];
 
