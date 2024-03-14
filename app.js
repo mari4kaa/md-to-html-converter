@@ -4,45 +4,36 @@ const fs = require('fs').promises;
 const { args, options } = require('./config/commander');
 const { Converter } = require('./Converter');
 const { Validator } = require('./Validator');
+const { PathManager } = require('./PathManager');
 
 class App {
   constructor (args, options) {
     this.filePaths = args;
     this.options = options;
-    this.html = '';
-    this.converter = new Converter(this.options);
+    this.output = '';
+    this.converter = new Converter(this.options.format);
     this.validator = new Validator();
+    this.pathManager = new PathManager();
   }
 
   async start () {
-    for (const filePath of this.filePaths) {
-      try {
-        await this.validator.validateMdFilepath(filePath);
-      } catch (err) {
-        console.error(err);
-        process.exit(1);
+    try {
+      for (const filePath of this.filePaths) {
+        await this.pathManager.validateMdFilepath(filePath);
+
+        const markdown = await fs.readFile(filePath, 'utf-8');
+        this.output += this.converter.convertMd(markdown, this.validator.validateMdContent.bind(this.validator));
       }
 
-      const markdown = await fs.readFile(filePath, 'utf-8');
-
-      try {
-        this.html += this.converter.convertMd(markdown, this.validator.validateMdContent.bind(this.validator));
-      } catch (err) {
-        console.error(err);
-        process.exit(1);
+      if (this.options.out) {
+        this.pathManager.validateOutputPath(this.options.out);
+        await fs.writeFile(this.options.out, this.output, 'utf-8');
+      } else {
+        console.log(this.output);
       }
-    }
-
-    if (this.options.out) {
-      try {
-        this.validator.validateOutputPath(this.options.out);
-      } catch (err) {
-        console.error(err);
-        process.exit(1);
-      }
-      await fs.writeFile(this.options.out, this.html, 'utf-8');
-    } else {
-      console.log(this.html);
+    } catch (err) {
+      console.error(err);
+      process.exit(1);
     }
   }
 }
