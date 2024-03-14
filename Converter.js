@@ -1,6 +1,6 @@
 'use strict';
 
-const { tagsHtml, tagsAnsi } = require('./config/constants');
+const { tags } = require('./config/constants');
 const { getTagsNeighbours } = require('./config/getTagsNeighbours');
 
 class Converter {
@@ -8,14 +8,23 @@ class Converter {
     this.convertedLine = '';
     this.inPreformattedText = false;
     this.inParagraph = false;
-    this.tags = format === 'html' ? tagsHtml : tagsAnsi;
+    this.formatTags = {};
+    if (format === 'html') {
+      Object.entries(tags).forEach(([name, tag]) => {
+        this.formatTags[name] = { md: tag.md, open: tag.html.open, close: tag.html.close };
+      });
+    } else {
+      Object.entries(tags).forEach(([name, tag]) => {
+        this.formatTags[name] = { md: tag.md, open: tag.ansi.open, close: tag.ansi.close };
+      });
+    }
   }
 
   convertMd (markdown, validateFunc) {
     const lines = markdown.split('\n');
 
     for (const line of lines) {
-      if (line.trim() === this.tags.preformatted.md) {
+      if (line.trim() === this.formatTags.preformatted.md) {
         this.handlePreformattedStart();
       } else if (this.inPreformattedText) {
         this.convertedLine += `${line}\n`;
@@ -29,7 +38,7 @@ class Converter {
 
     if (this.inPreformattedText) throw new Error('Unclosed preformatted tag was found');
     if (this.inParagraph) {
-      this.convertedLine += this.tags.paragraph.close;
+      this.convertedLine += this.formatTags.paragraph.close;
       this.inParagraph = false;
     }
 
@@ -43,7 +52,7 @@ class Converter {
 
   replaceFormattingTags (line) {
     let currentLine = line;
-    for (const [, tagObj] of Object.entries(this.tags)) {
+    for (const [, tagObj] of Object.entries(this.formatTags)) {
       if (tagObj.md === '\n' | tagObj.md === '```') continue;
 
       currentLine = this.replaceSameTags(currentLine, tagObj);
@@ -71,20 +80,20 @@ class Converter {
 
   handlePreformattedStart () {
     this.handleParagraphStart();
-    this.convertedLine += this.inPreformattedText ? this.tags.preformatted.close : this.tags.preformatted.open;
+    this.convertedLine += this.inPreformattedText ? this.formatTags.preformatted.close : this.formatTags.preformatted.open;
     this.inPreformattedText = !this.inPreformattedText;
   }
 
   handleParagraphStart () {
     if (!this.inParagraph) {
-      this.convertedLine += this.tags.paragraph.open;
+      this.convertedLine += this.formatTags.paragraph.open;
       this.inParagraph = true;
     }
   }
 
   handleParagraph () {
     if (this.inParagraph) {
-      this.convertedLine += this.tags.paragraph.close;
+      this.convertedLine += this.formatTags.paragraph.close;
       this.inParagraph = false;
     } else {
       this.handleParagraphStart();

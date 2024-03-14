@@ -1,13 +1,13 @@
 'use strict';
 
-const { tagsHtml } = require('./config/constants');
+const { tags } = require('./config/constants');
 const { getTagsNeighbours } = require('./config/getTagsNeighbours');
 
 class Validator {
   constructor () {
     this.isValidFilepath = true;
     this.inPreformattedText = false;
-    this.mdTags = Object.entries(tagsHtml).map(([, mdTag]) => mdTag.md);
+    this.mdTags = Object.entries(tags).map(([, tag]) => tag.md);
   }
 
   validateMdContent (line) {
